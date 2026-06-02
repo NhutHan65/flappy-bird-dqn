@@ -84,7 +84,7 @@ def main():
                 break
 
     print(f"Saving {len(frames)} frames to {output} ...")
-    imageio.mimsave(output, frames, fps=args.fps)
+    imageio.mimsave(output, frames, fps=args.fps, loop=0)
     print(f"Done — {output}")
 
 
