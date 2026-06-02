@@ -1,0 +1,5 @@
+torch==2.1.0+cpu
+numpy>=1.23.0,<2.0
+pygame>=2.1.0
+opencv-python>=4.8.0
+wandb>=0.15.0

@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.pyo
+checkpoints/
+saved_networks/
+logs_bird/
+*.pt
+wandb/
+.env
+CLAUDE.md
+DEVLOG.md
