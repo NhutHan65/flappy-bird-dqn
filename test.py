@@ -46,7 +46,7 @@ def main():
     cfg.CHECKPOINT_DIR  = os.path.join('checkpoints', args.mode)
 
     from wrapped_flappy_bird import GameState
-    game  = GameState(render=args.render)
+    game  = GameState(render=args.render, visual_mode=args.mode if args.render else 'rgb')
     agent = DoubleDQNAgent()
 
     ckpt_path = args.checkpoint or DoubleDQNAgent.latest_checkpoint(cfg.CHECKPOINT_DIR)

@@ -40,9 +40,10 @@ class GameState:
         False → headless fast mode for training (no FPS cap, no display update).
     """
 
-    def __init__(self, render: bool = True):
-        self.render_game = render
-        self.last_score  = 0          # score of the most recently completed episode
+    def __init__(self, render: bool = True, visual_mode: str = 'rgb'):
+        self.render_game  = render
+        self.visual_mode  = visual_mode   # 'rgb' | 'grayscale' | 'threshold'
+        self.last_score   = 0
         self._reset()
 
     def _reset(self):
@@ -161,6 +162,15 @@ class GameState:
         image_data = pygame.surfarray.array3d(pygame.display.get_surface())
 
         if self.render_game:
+            if self.visual_mode != 'rgb':
+                px = pygame.surfarray.pixels3d(SCREEN)
+                gray = (0.299 * px[:,:,0] + 0.587 * px[:,:,1] + 0.114 * px[:,:,2]).astype(np.uint8)
+                if self.visual_mode == 'threshold':
+                    gray = ((gray > 127) * 255).astype(np.uint8)
+                px[:,:,0] = gray
+                px[:,:,1] = gray
+                px[:,:,2] = gray
+                del px  # release surface lock before update
             pygame.display.update()
             FPSCLOCK.tick(FPS)
 
