@@ -1,6 +1,8 @@
 # Flappy Bird — Double DQN
 
-<img src="./images/flappy_bird_demp.gif" width="250">
+| RGB | Grayscale | Threshold |
+|:---:|:---:|:---:|
+| <img src="./images/flappy_bird_demp.gif" width="200"> | <img src="./images/grayscale_demo.gif" width="200"> | <img src="./images/threshold_demo.gif" width="200"> |
 
 Deep Reinforcement Learning agent that learns to play Flappy Bird from raw pixels using PyTorch.
 
