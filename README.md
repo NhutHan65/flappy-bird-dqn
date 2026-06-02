@@ -97,6 +97,8 @@ python test.py --episodes 50         # 50 evaluation episodes
 python test.py --render              # show game window
 ```
 
+When `--render` is used, the game window automatically displays in the agent's preprocessing mode — grayscale shows a grey display, threshold shows pure black/white, and rgb shows full colour. This lets you see exactly what the agent perceives during play.
+
 ## Project Structure
 
 ```
