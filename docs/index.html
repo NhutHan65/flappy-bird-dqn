@@ -85,20 +85,18 @@
     .team-section { background: #f4f4f4; padding: 2.5rem 0; }
     .team-photo-wrap {
       width: 100%;
-      height: 340px;
       border-radius: 4px;
       overflow: hidden;
+      background: #e8e8e8;
     }
     .team-photo {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top center;
+      height: auto;
       display: block;
     }
     .team-photo-placeholder {
       width: 100%;
-      height: 100%;
+      aspect-ratio: 3 / 4;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -109,6 +107,32 @@
     .author-card { text-align: center; }
     .author-card .author-name { font-size: 1rem; font-weight: 700; margin-top: 0.7rem; }
     .author-card .author-affil { font-size: 0.85rem; color: #666; margin-top: 0.1rem; }
+
+    /* CNN feature map doc-style description */
+    .conv-block { margin-bottom: 2.8rem; }
+    .conv-block .conv-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .conv-block .conv-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .conv-block .conv-meta {
+      font-size: 0.85rem;
+      color: #888;
+    }
+    .conv-block .conv-desc {
+      font-size: 0.95rem;
+      color: #444;
+      line-height: 1.75;
+      margin-bottom: 0.8rem;
+      padding-left: 0.8rem;
+      border-left: 3px solid #e0e0e0;
+    }
 
     /* Footer */
     footer.footer { background: #f9f9f9; padding: 2rem 1.5rem; font-size: 0.88rem; color: #666; }
@@ -372,37 +396,50 @@
           Brighter regions indicate where that filter responds most strongly.
         </p>
 
-        <!-- Conv Layer 1 -->
-        <div style="margin-bottom:2.5rem;">
-          <p style="font-size:1rem; font-weight:700; color:#4f8ef7; margin-bottom:0.3rem;">
-            Conv Layer 1 &nbsp;<span style="font-weight:400; color:#888; font-size:0.9rem;">32 filters &nbsp;·&nbsp; kernel 8×8 &nbsp;·&nbsp; stride 4 &nbsp;·&nbsp; output 20×20 px</span>
-          </p>
-          <p style="font-size:0.9rem; color:#555; margin-bottom:0.6rem; line-height:1.6;">
-            Detects coarse low-level features — pipe edges, the ground line, and the bird shape at a large receptive field.
+        <div class="conv-block">
+          <div class="conv-heading">
+            <span class="conv-name" style="color:#4f8ef7;">Conv Layer 1</span>
+            <span class="conv-meta">32 filters &nbsp;·&nbsp; kernel 8×8 &nbsp;·&nbsp; stride 4 &nbsp;·&nbsp; output 20×20 px</span>
+          </div>
+          <p class="conv-desc">
+            The first convolutional layer sweeps large 8×8 kernels across the input frame with stride 4,
+            producing 32 feature maps at 20×20 resolution. At this scale the network detects coarse
+            low-level structure: the vertical edges of the pipes, the horizontal ground line, and the
+            rough outline of the bird. Because the receptive field is large relative to the 84×84 input,
+            each activation cell covers a wide region of the scene.
           </p>
           <img src="images/feature_maps_conv1.png" alt="Conv Layer 1 feature maps"
                style="width:100%; border-radius:6px; display:block;" />
         </div>
 
-        <!-- Conv Layer 2 -->
-        <div style="margin-bottom:2.5rem;">
-          <p style="font-size:1rem; font-weight:700; color:#f7914f; margin-bottom:0.3rem;">
-            Conv Layer 2 &nbsp;<span style="font-weight:400; color:#888; font-size:0.9rem;">64 filters &nbsp;·&nbsp; kernel 4×4 &nbsp;·&nbsp; stride 2 &nbsp;·&nbsp; output 9×9 px</span>
-          </p>
-          <p style="font-size:0.9rem; color:#555; margin-bottom:0.6rem; line-height:1.6;">
-            Combines Conv 1 features into mid-level representations. Several filters clearly respond to the gap between the upper and lower pipes.
+        <div class="conv-block">
+          <div class="conv-heading">
+            <span class="conv-name" style="color:#f7914f;">Conv Layer 2</span>
+            <span class="conv-meta">64 filters &nbsp;·&nbsp; kernel 4×4 &nbsp;·&nbsp; stride 2 &nbsp;·&nbsp; output 9×9 px</span>
+          </div>
+          <p class="conv-desc">
+            The second layer doubles the filter count to 64 and applies 4×4 kernels on top of Conv 1's
+            activations, reducing spatial resolution to 9×9 px. Filters at this stage combine simple
+            edge responses into mid-level features. Several filters visibly specialise on the vertical
+            gap between the upper and lower pipes — the exact region the agent must navigate through.
+            The increased filter diversity allows the network to track multiple spatial cues simultaneously.
           </p>
           <img src="images/feature_maps_conv2.png" alt="Conv Layer 2 feature maps"
                style="width:100%; border-radius:6px; display:block;" />
         </div>
 
-        <!-- Conv Layer 3 -->
-        <div style="margin-bottom:1rem;">
-          <p style="font-size:1rem; font-weight:700; color:#c44ff7; margin-bottom:0.3rem;">
-            Conv Layer 3 &nbsp;<span style="font-weight:400; color:#888; font-size:0.9rem;">64 filters &nbsp;·&nbsp; kernel 3×3 &nbsp;·&nbsp; stride 1 &nbsp;·&nbsp; output 7×7 px</span>
-          </p>
-          <p style="font-size:0.9rem; color:#555; margin-bottom:0.6rem; line-height:1.6;">
-            Highest-level spatial features at 7×7 resolution. These activations feed directly into the Dueling heads and encode the agent's understanding of its position relative to the gap.
+        <div class="conv-block" style="margin-bottom:0;">
+          <div class="conv-heading">
+            <span class="conv-name" style="color:#c44ff7;">Conv Layer 3</span>
+            <span class="conv-meta">64 filters &nbsp;·&nbsp; kernel 3×3 &nbsp;·&nbsp; stride 1 &nbsp;·&nbsp; output 7×7 px</span>
+          </div>
+          <p class="conv-desc">
+            The final convolutional layer refines spatial detail with 3×3 kernels at full stride,
+            outputting 64 feature maps at 7×7 px. These high-level activations are flattened and
+            passed into the 512-unit fully-connected layer, then split into the Value V(s) and
+            Advantage A(s,a) streams of the Dueling head. The diversity of activation patterns here —
+            some filters nearly silent, others highly localised — reflects the network's learned
+            policy: only a small subset of spatial features is needed to decide whether to flap.
           </p>
           <img src="images/feature_maps_conv3.png" alt="Conv Layer 3 feature maps"
                style="width:100%; border-radius:6px; display:block;" />
