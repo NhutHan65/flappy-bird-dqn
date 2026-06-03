@@ -81,7 +81,7 @@ def main():
                 print(f"Episode {ep:3d}  |  Score: {score:4d}  |  Reward: {ep_reward:.2f}")
                 break
 
-    print(f"\n{'─'*45}")
+    print(f"\n{'-'*45}")
     print(f"Episodes   : {args.episodes}")
     print(f"Mean score : {np.mean(scores):.2f}")
     print(f"Max score  : {int(np.max(scores))}")
