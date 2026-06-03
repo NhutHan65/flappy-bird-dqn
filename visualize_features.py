@@ -1,8 +1,10 @@
 """
 visualize_features.py  --  CNN feature map visualisation (3 separate images).
 
+Each image: input frame + 16 filter activations. No text inside the image.
+
 Usage:
-    python visualize_features.py                 # threshold (default)
+    python visualize_features.py
     python visualize_features.py --mode grayscale
 """
 from __future__ import annotations
@@ -20,16 +22,12 @@ from preprocess import build_initial_state
 
 BG    = '#0f1117'
 PANEL = '#1c1f2e'
-WHITE = '#e8eaf6'
 GREY  = '#6c7a9c'
 
 LAYER_INFO = [
-    {'name': 'Conv Layer 1', 'filters': 32, 'kernel': '8x8', 'stride': 4,
-     'cmap': 'viridis', 'color': '#4f8ef7'},
-    {'name': 'Conv Layer 2', 'filters': 64, 'kernel': '4x4', 'stride': 2,
-     'cmap': 'plasma',  'color': '#f7914f'},
-    {'name': 'Conv Layer 3', 'filters': 64, 'kernel': '3x3', 'stride': 1,
-     'cmap': 'inferno', 'color': '#c44ff7'},
+    {'cmap': 'viridis', 'color': '#4f8ef7'},
+    {'cmap': 'plasma',  'color': '#f7914f'},
+    {'cmap': 'inferno', 'color': '#c44ff7'},
 ]
 N_SHOW = 16
 
@@ -74,70 +72,58 @@ def norm(arr):
 
 def draw_layer(state, fmaps, info, mode, out_path):
     color = info['color']
-    fig = plt.figure(figsize=(20, 4.2), facecolor=BG)
-    gs = gridspec.GridSpec(
-        1, N_SHOW + 3, figure=fig, wspace=0.05,
-        width_ratios=[2.8, 2.5, 0.4] + [1] * N_SHOW
+
+    # cols: 1 input frame + 1 narrow arrow + N_SHOW maps + 1 cbar
+    col_ratios = [2] + [0.25] + [1] * N_SHOW + [0.15]
+    fig, axes = plt.subplots(
+        1, len(col_ratios),
+        figsize=(22, 3.5),
+        facecolor=BG,
+        gridspec_kw={'width_ratios': col_ratios, 'wspace': 0.04}
     )
 
-    # label panel
-    ax_lbl = fig.add_subplot(gs[0, 0])
-    ax_lbl.set_facecolor(PANEL)
-    ax_lbl.axis('off')
-    ax_lbl.axhline(y=0.93, xmin=0.06, xmax=0.94, color=color, linewidth=3)
-    ax_lbl.text(0.5, 0.70, info['name'],
-                color=color, fontsize=13, fontweight='bold',
-                ha='center', va='center', transform=ax_lbl.transAxes)
-    details = (f"{info['filters']} filters  |  kernel {info['kernel']}  |  stride {info['stride']}\n"
-               f"output: {fmaps.shape[1]}x{fmaps.shape[2]} px per filter")
-    ax_lbl.text(0.5, 0.35, details,
-                color=GREY, fontsize=9, ha='center', va='center',
-                transform=ax_lbl.transAxes, linespacing=1.9)
-
     # input frame
-    ax_inp = fig.add_subplot(gs[0, 1])
+    ax_inp = axes[0]
     ax_inp.set_facecolor(PANEL)
     inp_cmap = 'gray' if mode in ('grayscale', 'threshold') else None
-    ax_inp.imshow(norm(state[0]), cmap=inp_cmap, interpolation='nearest', aspect='auto')
-    ax_inp.set_title('Input frame  (channel 1 / 4)', color=GREY, fontsize=8, pad=5)
-    ax_inp.axis('off')
+    ax_inp.imshow(norm(state[0]), cmap=inp_cmap,
+                  interpolation='nearest', aspect='equal')
+    for spine in ax_inp.spines.values():
+        spine.set_edgecolor(color)
+        spine.set_linewidth(1.5)
+    ax_inp.set_xticks([])
+    ax_inp.set_yticks([])
 
     # arrow
-    ax_arr = fig.add_subplot(gs[0, 2])
+    ax_arr = axes[1]
     ax_arr.set_facecolor(BG)
     ax_arr.axis('off')
-    ax_arr.annotate('', xy=(0.82, 0.5), xytext=(0.18, 0.5),
+    ax_arr.annotate('', xy=(0.9, 0.5), xytext=(0.1, 0.5),
                     xycoords='axes fraction',
-                    arrowprops=dict(arrowstyle='->', color=color, lw=2.2))
+                    arrowprops=dict(arrowstyle='->', color=color, lw=2.0))
 
-    # filter cells
+    # feature map cells
     for i in range(N_SHOW):
-        ax = fig.add_subplot(gs[0, i + 3])
+        ax = axes[i + 2]
         ax.set_facecolor(PANEL)
         ax.imshow(norm(fmaps[i]), cmap=info['cmap'],
-                  interpolation='nearest', aspect='auto')
+                  interpolation='nearest', aspect='equal')
         ax.axis('off')
-        ax.text(0.5, -0.09, str(i + 1),
-                color=GREY, fontsize=7, ha='center', va='top',
-                transform=ax.transAxes)
 
-    # colorbar
+    # colorbar using the last axes slot
+    ax_cb = axes[-1]
+    ax_cb.set_facecolor(BG)
+    ax_cb.axis('off')
     sm = plt.cm.ScalarMappable(cmap=info['cmap'])
     sm.set_array([])
-    cbar = fig.colorbar(sm, ax=fig.axes[-1], fraction=0.9, pad=0.04, aspect=22)
+    cbar = fig.colorbar(sm, ax=ax_cb, fraction=1.0, pad=0.0, aspect=14)
     cbar.ax.tick_params(labelcolor=GREY, labelsize=7, length=2)
     cbar.outline.set_edgecolor(GREY)
-    cbar.set_ticks([0, 0.5, 1.0])
-    cbar.set_ticklabels(['low', 'mid', 'high'])
-
-    fig.text(0.5, -0.03,
-             f'Brighter = stronger filter activation  |  '
-             f'Filter indices 1-{N_SHOW} shown below each cell  |  '
-             f'Mode: {mode}  |  Checkpoint: checkpoints/{mode}/ckpt_final.pt',
-             color=GREY, fontsize=7.5, ha='center', va='top')
+    cbar.set_ticks([0, 1])
+    cbar.set_ticklabels(['low', 'high'])
 
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
-    plt.savefig(out_path, dpi=160, bbox_inches='tight',
+    plt.savefig(out_path, dpi=180, bbox_inches='tight',
                 facecolor=fig.get_facecolor())
     plt.close()
     print(f'Saved: {out_path}')
@@ -152,10 +138,9 @@ def main():
     cfg.PREPROCESS_MODE = args.mode
     cfg.IN_CHANNELS = cfg.N_FRAMES * (3 if args.mode == 'rgb' else 1)
 
-    ckpt_dir = os.path.join('checkpoints', args.mode)
-    ckpt = latest_checkpoint(ckpt_dir)
+    ckpt = latest_checkpoint(os.path.join('checkpoints', args.mode))
     if ckpt is None:
-        raise FileNotFoundError(f'No checkpoint in {ckpt_dir}')
+        raise FileNotFoundError(f'No checkpoint in checkpoints/{args.mode}')
 
     print(f'Loading {ckpt}')
     model = DuelingCNN(cfg.IN_CHANNELS, cfg.ACTIONS).to(cfg.DEVICE)
@@ -163,16 +148,15 @@ def main():
     model.load_state_dict(data['policy_net'])
     model.eval()
 
-    print(f'Capturing game frame (80 steps)...')
-    raw = get_game_frame(args.mode, 80)
+    print('Capturing game frame...')
+    raw = get_game_frame(args.mode)
     state = build_initial_state(raw, args.mode)
     state_t = torch.tensor(state, dtype=torch.float32).unsqueeze(0).to(cfg.DEVICE)
 
     all_maps = extract_feature_maps(model, state_t)
-
     for i, info in enumerate(LAYER_INFO):
-        out = f'docs/images/feature_maps_conv{i+1}.png'
-        draw_layer(state, all_maps[i], info, args.mode, out)
+        draw_layer(state, all_maps[i], info, args.mode,
+                   f'docs/images/feature_maps_conv{i+1}.png')
 
 
 if __name__ == '__main__':

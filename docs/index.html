@@ -367,22 +367,45 @@
       <div class="column is-10">
 
         <h2 class="section-title">CNN Feature Maps</h2>
-        <p style="margin-bottom:1.5rem; line-height:1.8;">
-          The visualisations below show what each convolutional layer "sees" when processing
-          a real game frame (threshold mode). Each cell is one filter's activation map —
-          brighter regions indicate where that filter responds most strongly.
-          Conv Layer 1 detects coarse structural features (pipe edges, ground line).
-          Deeper layers build higher-level representations — some filters in Conv 2 &amp; 3
-          clearly specialise on the gap between pipes, the critical region for the agent's decision.
+        <p style="margin-bottom:2rem; line-height:1.8;">
+          Each row shows the input frame (left) and 16 filter activations for one convolutional layer.
+          Brighter regions indicate where that filter responds most strongly.
         </p>
 
-        <div style="margin-bottom:1rem;">
+        <!-- Conv Layer 1 -->
+        <div style="margin-bottom:2.5rem;">
+          <p style="font-size:1rem; font-weight:700; color:#4f8ef7; margin-bottom:0.3rem;">
+            Conv Layer 1 &nbsp;<span style="font-weight:400; color:#888; font-size:0.9rem;">32 filters &nbsp;·&nbsp; kernel 8×8 &nbsp;·&nbsp; stride 4 &nbsp;·&nbsp; output 20×20 px</span>
+          </p>
+          <p style="font-size:0.9rem; color:#555; margin-bottom:0.6rem; line-height:1.6;">
+            Detects coarse low-level features — pipe edges, the ground line, and the bird shape at a large receptive field.
+          </p>
           <img src="images/feature_maps_conv1.png" alt="Conv Layer 1 feature maps"
-               style="max-width:100%; border-radius:6px; margin-bottom:1rem;" />
+               style="width:100%; border-radius:6px; display:block;" />
+        </div>
+
+        <!-- Conv Layer 2 -->
+        <div style="margin-bottom:2.5rem;">
+          <p style="font-size:1rem; font-weight:700; color:#f7914f; margin-bottom:0.3rem;">
+            Conv Layer 2 &nbsp;<span style="font-weight:400; color:#888; font-size:0.9rem;">64 filters &nbsp;·&nbsp; kernel 4×4 &nbsp;·&nbsp; stride 2 &nbsp;·&nbsp; output 9×9 px</span>
+          </p>
+          <p style="font-size:0.9rem; color:#555; margin-bottom:0.6rem; line-height:1.6;">
+            Combines Conv 1 features into mid-level representations. Several filters clearly respond to the gap between the upper and lower pipes.
+          </p>
           <img src="images/feature_maps_conv2.png" alt="Conv Layer 2 feature maps"
-               style="max-width:100%; border-radius:6px; margin-bottom:1rem;" />
+               style="width:100%; border-radius:6px; display:block;" />
+        </div>
+
+        <!-- Conv Layer 3 -->
+        <div style="margin-bottom:1rem;">
+          <p style="font-size:1rem; font-weight:700; color:#c44ff7; margin-bottom:0.3rem;">
+            Conv Layer 3 &nbsp;<span style="font-weight:400; color:#888; font-size:0.9rem;">64 filters &nbsp;·&nbsp; kernel 3×3 &nbsp;·&nbsp; stride 1 &nbsp;·&nbsp; output 7×7 px</span>
+          </p>
+          <p style="font-size:0.9rem; color:#555; margin-bottom:0.6rem; line-height:1.6;">
+            Highest-level spatial features at 7×7 resolution. These activations feed directly into the Dueling heads and encode the agent's understanding of its position relative to the gap.
+          </p>
           <img src="images/feature_maps_conv3.png" alt="Conv Layer 3 feature maps"
-               style="max-width:100%; border-radius:6px;" />
+               style="width:100%; border-radius:6px; display:block;" />
         </div>
 
       </div>
