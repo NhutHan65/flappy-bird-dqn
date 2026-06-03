@@ -83,18 +83,22 @@
 
     /* Team members */
     .team-section { background: #f4f4f4; padding: 2.5rem 0; }
+    .team-photo-wrap {
+      width: 100%;
+      height: 340px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
     .team-photo {
       width: 100%;
-      aspect-ratio: 3 / 4;
+      height: 100%;
       object-fit: cover;
-      object-position: top;
-      border-radius: 4px;
+      object-position: top center;
       display: block;
     }
     .team-photo-placeholder {
       width: 100%;
-      aspect-ratio: 3 / 4;
-      border-radius: 4px;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -175,25 +179,31 @@
     <div class="columns is-variable is-4">
 
       <div class="column author-card">
-        <img class="team-photo" src="images/avatar_han.jpg" alt="Han Pham"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-        <div class="team-photo-placeholder" style="background:#3273dc; display:none;">HP</div>
+        <div class="team-photo-wrap">
+          <img class="team-photo" src="images/avatar_han.jpg" alt="Han Pham"
+            onerror="this.style.display='none'; this.parentElement.querySelector('.team-photo-placeholder').style.display='flex';" />
+          <div class="team-photo-placeholder" style="background:#3273dc; display:none;">HP</div>
+        </div>
         <p class="author-name">Han Pham</p>
         <p class="author-affil">University of Technology Sydney</p>
       </div>
 
       <div class="column author-card">
-        <img class="team-photo" src="images/avatar_tony.jpg" alt="Tony Nguyen"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-        <div class="team-photo-placeholder" style="background:#23d160; display:none;">TN</div>
+        <div class="team-photo-wrap">
+          <img class="team-photo" src="images/avatar_tony.jpg" alt="Tony Nguyen"
+            onerror="this.style.display='none'; this.parentElement.querySelector('.team-photo-placeholder').style.display='flex';" />
+          <div class="team-photo-placeholder" style="background:#23d160; display:none;">TN</div>
+        </div>
         <p class="author-name">Tony Nguyen</p>
         <p class="author-affil">University of Technology Sydney</p>
       </div>
 
       <div class="column author-card">
-        <img class="team-photo" src="images/avatar_jayden.jpg" alt="Jayden Vu"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-        <div class="team-photo-placeholder" style="background:#ff6b6b; display:none;">JV</div>
+        <div class="team-photo-wrap">
+          <img class="team-photo" src="images/avatar_jayden.jpg" alt="Jayden Vu"
+            onerror="this.style.display='none'; this.parentElement.querySelector('.team-photo-placeholder').style.display='flex';" />
+          <div class="team-photo-placeholder" style="background:#ff6b6b; display:none;">JV</div>
+        </div>
         <p class="author-name">Jayden Vu</p>
         <p class="author-affil">University of Technology Sydney</p>
       </div>
