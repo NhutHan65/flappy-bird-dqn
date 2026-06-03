@@ -275,18 +275,19 @@
 
         <h2 class="section-title">Abstract</h2>
         <p style="font-size:1.05rem; line-height:1.8;">
-          This project modernises a 10-year-old Flappy Bird DQN implementation
-          (<em>yenchenlin/DeepLearningFlappyBird</em>, TensorFlow 0.7, Python 2) into a
-          state-of-the-art Deep Reinforcement Learning system using PyTorch.
-          Going well beyond the tutorial baseline — which uses a hand-crafted 2-D state vector
-          with a plain MLP — this implementation trains directly from raw pixels via a
-          <strong>Dueling CNN</strong> combined with <strong>Double DQN</strong>,
+          We present a deep reinforcement learning agent that learns to play Flappy Bird
+          directly from raw pixel input using PyTorch. The system combines a
+          <strong>Dueling CNN</strong> architecture with <strong>Double DQN</strong>,
           <strong>Prioritized Experience Replay (PER)</strong>, and a <strong>soft τ-update</strong>
-          target network.
-          An ablation study across three preprocessing modes (grayscale, binary threshold, and full RGB)
-          reveals that binary thresholding — despite using fewer training episodes —
-          dramatically outperforms grayscale, reaching a mean score of 282 vs. 19,
-          highlighting the impact of input representation on CNN convergence in pixel-based RL.
+          target network to produce stable, sample-efficient training.
+          Rather than relying on hand-crafted state features, the agent processes stacked
+          game frames through three convolutional layers, enabling it to learn spatial
+          representations entirely from visual observations.
+          An ablation study across three preprocessing modes — grayscale, binary threshold,
+          and full RGB — reveals that binary thresholding dramatically outperforms the alternatives,
+          achieving a mean score of 282 and a peak of 1221 pipes despite training for fewer episodes.
+          These results highlight how input representation significantly impacts CNN convergence
+          in pixel-based reinforcement learning tasks.
         </p>
 
       </div>
