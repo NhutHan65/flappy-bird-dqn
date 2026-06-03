@@ -81,16 +81,30 @@
     }
     .video-placeholder i { font-size: 3rem; margin-bottom: 0.8rem; color: #555; }
 
-    /* Avatar */
-    .author-avatar {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
+    /* Team members */
+    .team-section { background: #f4f4f4; padding: 2.5rem 0; }
+    .team-photo {
+      width: 100%;
+      aspect-ratio: 3 / 4;
       object-fit: cover;
-      border: 3px solid #ddd;
+      object-position: top;
+      border-radius: 4px;
+      display: block;
+    }
+    .team-photo-placeholder {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #fff;
     }
     .author-card { text-align: center; }
-    .author-card p { font-size: 0.9rem; margin-top: 0.4rem; }
+    .author-card .author-name { font-size: 1rem; font-weight: 700; margin-top: 0.7rem; }
+    .author-card .author-affil { font-size: 0.85rem; color: #666; margin-top: 0.1rem; }
 
     /* Footer */
     footer.footer { background: #f9f9f9; padding: 2rem 1.5rem; font-size: 0.88rem; color: #666; }
@@ -154,6 +168,40 @@
   </div>
 </section>
 
+<!-- ════════════════════════════════════════════════════ TEAM -->
+<section class="team-section">
+  <div class="container">
+    <h2 class="section-title" style="margin-bottom:1.5rem;">Team members</h2>
+    <div class="columns is-variable is-4">
+
+      <div class="column author-card">
+        <img class="team-photo" src="images/avatar_han.jpg" alt="Han Pham"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="team-photo-placeholder" style="background:#3273dc; display:none;">HP</div>
+        <p class="author-name">Han Pham</p>
+        <p class="author-affil">University of Technology Sydney</p>
+      </div>
+
+      <div class="column author-card">
+        <img class="team-photo" src="images/avatar_tony.jpg" alt="Tony Nguyen"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="team-photo-placeholder" style="background:#23d160; display:none;">TN</div>
+        <p class="author-name">Tony Nguyen</p>
+        <p class="author-affil">University of Technology Sydney</p>
+      </div>
+
+      <div class="column author-card">
+        <img class="team-photo" src="images/avatar_jayden.jpg" alt="Jayden Vu"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="team-photo-placeholder" style="background:#ff6b6b; display:none;">JV</div>
+        <p class="author-name">Jayden Vu</p>
+        <p class="author-affil">University of Technology Sydney</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- ═════════════════════════════════════════════════════════ TEASER -->
 <section class="teaser">
   <div class="container">
@@ -199,51 +247,6 @@
           dramatically outperforms grayscale, reaching a mean score of 282 vs. 19,
           highlighting the impact of input representation on CNN convergence in pixel-based RL.
         </p>
-
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════════ TEAM -->
-<section class="section" style="padding-top:2rem; padding-bottom:2rem;">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-8">
-
-        <h2 class="section-title">Team</h2>
-        <div class="columns is-centered">
-          <div class="column is-3 author-card">
-            <img
-              class="author-avatar"
-              src="images/avatar_han.jpg"
-              alt="Han Pham"
-              onerror="this.src='https://ui-avatars.com/api/?name=Han+Pham&background=3273dc&color=fff&size=100'"
-            />
-            <p><strong>Han Pham</strong></p>
-            <p style="color:#666;">UTS &mdash; 2026</p>
-          </div>
-          <div class="column is-3 author-card">
-            <img
-              class="author-avatar"
-              src="images/avatar_tony.jpg"
-              alt="Tony Nguyen"
-              onerror="this.src='https://ui-avatars.com/api/?name=Tony+Nguyen&background=23d160&color=fff&size=100'"
-            />
-            <p><strong>Tony Nguyen</strong></p>
-            <p style="color:#666;">UTS &mdash; 2026</p>
-          </div>
-          <div class="column is-3 author-card">
-            <img
-              class="author-avatar"
-              src="images/avatar_jayden.jpg"
-              alt="Jayden Vu"
-              onerror="this.src='https://ui-avatars.com/api/?name=Jayden+Vu&background=ff6b6b&color=fff&size=100'"
-            />
-            <p><strong>Jayden Vu</strong></p>
-            <p style="color:#666;">UTS &mdash; 2026</p>
-          </div>
-        </div>
 
       </div>
     </div>
@@ -354,20 +357,22 @@
       <div class="column is-10">
 
         <h2 class="section-title">CNN Feature Maps</h2>
-        <p style="margin-bottom:1.2rem; line-height:1.8;">
-          The visualisation below shows what each convolutional layer "sees" when processing
-          a real game frame (threshold mode). The input frame is a binary black-and-white image
-          showing the bird and pipe positions. Each cell is one filter's activation map —
+        <p style="margin-bottom:1.5rem; line-height:1.8;">
+          The visualisations below show what each convolutional layer "sees" when processing
+          a real game frame (threshold mode). Each cell is one filter's activation map —
           brighter regions indicate where that filter responds most strongly.
+          Conv Layer 1 detects coarse structural features (pipe edges, ground line).
+          Deeper layers build higher-level representations — some filters in Conv 2 &amp; 3
+          clearly specialise on the gap between pipes, the critical region for the agent's decision.
         </p>
-        <p style="margin-bottom:1.2rem; line-height:1.8;">
-          Early layers (Conv 1, viridis) detect coarse structural features such as pipe edges
-          and the ground line. Deeper layers (Conv 2 &amp; 3) combine these into higher-level
-          representations — some filters clearly specialise on the gap between pipes,
-          which is the critical region for the agent's decision.
-        </p>
-        <div class="has-text-centered">
-          <img src="images/feature_maps.png" alt="CNN feature maps" style="max-width:100%; border-radius:6px;" />
+
+        <div style="margin-bottom:1rem;">
+          <img src="images/feature_maps_conv1.png" alt="Conv Layer 1 feature maps"
+               style="max-width:100%; border-radius:6px; margin-bottom:1rem;" />
+          <img src="images/feature_maps_conv2.png" alt="Conv Layer 2 feature maps"
+               style="max-width:100%; border-radius:6px; margin-bottom:1rem;" />
+          <img src="images/feature_maps_conv3.png" alt="Conv Layer 3 feature maps"
+               style="max-width:100%; border-radius:6px;" />
         </div>
 
       </div>
