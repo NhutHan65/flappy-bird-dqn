@@ -90,12 +90,15 @@
     }
     .team-photo-wrap {
       width: 100%;
+      aspect-ratio: 4 / 5;
       border-radius: 4px;
       overflow: hidden;
     }
     .team-photo {
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
       display: block;
     }
     .team-photo-placeholder {
