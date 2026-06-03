@@ -205,75 +205,96 @@
   </div>
 </section>
 
-<!-- ════════════════════════════════════════════ BEYOND THE TUTORIAL -->
+<!-- ════════════════════════════════════════════ KEY FEATURES -->
 <section class="section" style="background:#fafafa; padding-top:2rem;">
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-10">
 
-        <h2 class="section-title">Beyond the Tutorial</h2>
-        <p style="margin-bottom:1.2rem;">
-          The tutorial (<code>Tutorial_07_solution_DQN.ipynb</code>) uses vanilla DQN + MLP on a 2-D
-          hand-crafted state vector. Every component below goes beyond that baseline.
-        </p>
+        <h2 class="section-title">Key Features</h2>
 
-        <div class="table-container">
-          <table class="table is-bordered is-striped is-fullwidth algo-row">
-            <thead>
-              <tr>
-                <th>Feature</th>
-                <th>Tutorial</th>
-                <th>This project</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Input</td>
-                <td>[x, y] 2-D vector</td>
-                <td>Raw pixels → CNN (84×84 × 4 frames)</td>
-              </tr>
-              <tr>
-                <td>Network</td>
-                <td>MLP 128→128</td>
-                <td><strong>Dueling CNN</strong> — V(s) + A(s,a) − mean(A)</td>
-              </tr>
-              <tr>
-                <td>DQN variant</td>
-                <td>Vanilla DQN</td>
-                <td><strong>Double DQN</strong> — policy net selects, target net evaluates</td>
-              </tr>
-              <tr>
-                <td>Target update</td>
-                <td>Hard copy every N steps</td>
-                <td><strong>Soft τ-update</strong> (τ = 0.005 every step)</td>
-              </tr>
-              <tr>
-                <td>Replay sampling</td>
-                <td>Uniform</td>
-                <td><strong>Prioritized Experience Replay (PER)</strong></td>
-              </tr>
-              <tr>
-                <td>Forgetting protection</td>
-                <td>10% protected segment</td>
-                <td>10% protected <strong>+ PER priority</strong></td>
-              </tr>
-              <tr>
-                <td>Data augmentation</td>
-                <td>None</td>
-                <td>Brightness jitter × uniform(0.85, 1.15)</td>
-              </tr>
-              <tr>
-                <td>Preprocessing</td>
-                <td>N/A</td>
-                <td><strong>Ablation</strong>: grayscale / threshold / rgb</td>
-              </tr>
-              <tr>
-                <td>Logging</td>
-                <td>None</td>
-                <td><strong>WandB</strong> — score, loss, Q-max, ε, β per episode</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="columns is-multiline" style="margin-top:0.5rem;">
+
+          <div class="column is-6">
+            <div class="box" style="height:100%;">
+              <p class="is-size-5" style="margin-bottom:0.4rem;">
+                <span style="font-size:1.4rem;">🧠</span> <strong>Dueling CNN</strong>
+              </p>
+              <p style="color:#444; line-height:1.7;">
+                Three convolutional layers feed into separate <strong>Value V(s)</strong> and
+                <strong>Advantage A(s,a)</strong> streams. Combined as
+                <code>Q = V + A − mean(A)</code>, the network learns which states are
+                inherently good independently of which action to take.
+              </p>
+            </div>
+          </div>
+
+          <div class="column is-6">
+            <div class="box" style="height:100%;">
+              <p class="is-size-5" style="margin-bottom:0.4rem;">
+                <span style="font-size:1.4rem;">🔁</span> <strong>Double DQN</strong>
+              </p>
+              <p style="color:#444; line-height:1.7;">
+                Decouples action <em>selection</em> (policy net) from action <em>evaluation</em>
+                (target net), eliminating the overestimation bias of vanilla DQN and producing
+                more accurate Q-value estimates throughout training.
+              </p>
+            </div>
+          </div>
+
+          <div class="column is-6">
+            <div class="box" style="height:100%;">
+              <p class="is-size-5" style="margin-bottom:0.4rem;">
+                <span style="font-size:1.4rem;">⚡</span> <strong>Prioritized Experience Replay</strong>
+              </p>
+              <p style="color:#444; line-height:1.7;">
+                Transitions with high TD-error are sampled more frequently, focusing learning
+                on the most informative experiences. Combined with a <strong>protected 10% buffer
+                segment</strong> that is never overwritten, catastrophic forgetting is minimised.
+              </p>
+            </div>
+          </div>
+
+          <div class="column is-6">
+            <div class="box" style="height:100%;">
+              <p class="is-size-5" style="margin-bottom:0.4rem;">
+                <span style="font-size:1.4rem;">🎯</span> <strong>Soft Target Update</strong>
+              </p>
+              <p style="color:#444; line-height:1.7;">
+                Instead of a hard copy every N steps, the target network is updated
+                every step via <code>θ_target ← τ·θ + (1−τ)·θ_target</code> with τ = 0.005,
+                giving smoother and more stable training dynamics.
+              </p>
+            </div>
+          </div>
+
+          <div class="column is-6">
+            <div class="box" style="height:100%;">
+              <p class="is-size-5" style="margin-bottom:0.4rem;">
+                <span style="font-size:1.4rem;">🎨</span> <strong>Preprocessing Ablation Study</strong>
+              </p>
+              <p style="color:#444; line-height:1.7;">
+                Three input modes — <strong>grayscale</strong>, <strong>binary threshold</strong>,
+                and <strong>RGB</strong> — are compared across the same architecture.
+                Frames are resized to 84×84 and stacked across 4 timesteps to encode motion,
+                stored as uint8 to keep buffer memory under 700 MB.
+              </p>
+            </div>
+          </div>
+
+          <div class="column is-6">
+            <div class="box" style="height:100%;">
+              <p class="is-size-5" style="margin-bottom:0.4rem;">
+                <span style="font-size:1.4rem;">✨</span> <strong>Brightness Jitter Augmentation</strong>
+              </p>
+              <p style="color:#444; line-height:1.7;">
+                Random brightness scaling × uniform(0.85, 1.15) is applied to training batches
+                — not during data collection — improving robustness without destabilising
+                the target values used for learning.
+              </p>
+            </div>
+          </div>
+
         </div>
 
       </div>
