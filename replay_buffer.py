@@ -3,7 +3,7 @@ import numpy as np
 
 class PrioritizedReplayBuffer:
     """
-    Replay buffer with two key improvements over the tutorial's uniform buffer:
+    Prioritized replay buffer with two protections against catastrophic forgetting:
 
     1. Protected early-experience segment
        The first `mem_retain` fraction of slots is never overwritten.

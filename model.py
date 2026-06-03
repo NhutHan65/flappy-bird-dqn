@@ -7,9 +7,8 @@ class DuelingCNN(nn.Module):
     """
     CNN feature extractor + Dueling DQN heads.
 
-    Goes beyond tutorial (MLP on 2-D state):
-      - Learns directly from raw pixel frames
-      - Separate value V(s) and advantage A(s,a) streams (Dueling DQN)
+    Learns directly from raw pixel frames (84x84 x 4 stacked).
+    Separate value V(s) and advantage A(s,a) streams (Dueling architecture).
 
     Input : (B, C, 84, 84)  pixel values 0-255
     Output: (B, n_actions)  Q-values

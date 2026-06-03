@@ -2,8 +2,8 @@
 Double DQN agent with Dueling architecture, Prioritized Experience Replay,
 soft target-network updates, and data augmentation.
 
-What this adds beyond the tutorial (vanilla DQN + MLP + uniform replay):
-  1. CNN input  — learns from raw pixels instead of hand-crafted [x, y] state
+Key design decisions:
+  1. CNN input  — learns from raw pixels instead of hand-crafted state features
   2. Double DQN — policy net selects action, target net evaluates it
                   (fixes Q-value overestimation bias)
   3. Dueling    — separate value V(s) and advantage A(s,a) streams
