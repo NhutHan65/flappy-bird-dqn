@@ -302,6 +302,34 @@
   </div>
 </section>
 
+<!-- ══════════════════════════════════════════ CNN FEATURE MAPS -->
+<section class="section" style="background:#fafafa; padding-top:2rem;">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-10">
+
+        <h2 class="section-title">CNN Feature Maps</h2>
+        <p style="margin-bottom:1.2rem; line-height:1.8;">
+          The visualisation below shows what each convolutional layer "sees" when processing
+          a real game frame (threshold mode). The input frame is a binary black-and-white image
+          showing the bird and pipe positions. Each cell is one filter's activation map —
+          brighter regions indicate where that filter responds most strongly.
+        </p>
+        <p style="margin-bottom:1.2rem; line-height:1.8;">
+          Early layers (Conv 1, viridis) detect coarse structural features such as pipe edges
+          and the ground line. Deeper layers (Conv 2 &amp; 3) combine these into higher-level
+          representations — some filters clearly specialise on the gap between pipes,
+          which is the critical region for the agent's decision.
+        </p>
+        <div class="has-text-centered">
+          <img src="images/feature_maps.png" alt="CNN feature maps" style="max-width:100%; border-radius:6px;" />
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════════════════════════════════════════════ ARCHITECTURE -->
 <section class="section">
   <div class="container">
