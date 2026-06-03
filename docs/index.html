@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flappy Bird — Double DQN Portfolio</title>
+
+  <!-- Bulma CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    body { font-family: 'Noto Sans', sans-serif; color: #222; }
+    h1, h2, h3, h4, .title, .subtitle { font-family: 'Google Sans', 'Noto Sans', sans-serif; }
+
+    /* Hero */
+    .hero { background: #fff; padding-top: 3rem; padding-bottom: 1.5rem; }
+    .hero .title { font-size: 2.4rem; font-weight: 700; }
+
+    /* Author block */
+    .authors { font-size: 1.1rem; margin-top: 0.5rem; }
+    .authors a { color: #363636; border-bottom: 1px solid #aaa; }
+    .authors a:hover { border-color: #3273dc; color: #3273dc; }
+    .affil { font-size: 0.9rem; color: #555; margin-top: 0.3rem; }
+
+    /* Link buttons */
+    .pub-links { margin-top: 1.2rem; }
+    .pub-links .button { border-radius: 20px; font-weight: 500; }
+
+    /* Teaser */
+    .teaser { background: #f8f8f8; padding: 2rem 0; }
+    .teaser-caption { font-size: 0.95rem; color: #444; margin-top: 0.8rem; }
+
+    /* Section headings */
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 0.4rem;
+      margin-bottom: 1.2rem;
+    }
+
+    /* Demo GIF row */
+    .demo-label { font-size: 0.9rem; font-weight: 600; margin-top: 0.5rem; color: #444; }
+
+    /* Ablation table */
+    table.ablation { max-width: 560px; margin: 1rem auto; }
+    table.ablation td, table.ablation th { text-align: center; }
+    .best { font-weight: 700; color: #23d160; }
+
+    /* Algorithm comparison */
+    .algo-row td:first-child { font-weight: 600; white-space: nowrap; }
+
+    /* Code/bibtex block */
+    .bibtex-block {
+      background: #f5f5f5;
+      border-left: 4px solid #3273dc;
+      padding: 1rem 1.2rem;
+      font-family: monospace;
+      font-size: 0.88rem;
+      white-space: pre;
+      overflow-x: auto;
+      border-radius: 4px;
+    }
+
+    /* Video placeholder */
+    .video-placeholder {
+      background: #1a1a2e;
+      color: #aaa;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 360px;
+      font-size: 1rem;
+    }
+    .video-placeholder i { font-size: 3rem; margin-bottom: 0.8rem; color: #555; }
+
+    /* Avatar */
+    .author-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ddd;
+    }
+    .author-card { text-align: center; }
+    .author-card p { font-size: 0.9rem; margin-top: 0.4rem; }
+
+    /* Footer */
+    footer.footer { background: #f9f9f9; padding: 2rem 1.5rem; font-size: 0.88rem; color: #666; }
+    footer a { color: #3273dc; }
+
+    /* Highlight box */
+    .highlight-box {
+      background: linear-gradient(135deg, #e8f5e9, #e3f2fd);
+      border-radius: 8px;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0;
+    }
+    .highlight-box p { margin: 0; font-size: 1rem; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero .title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ HERO -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+
+      <h1 class="title">Flappy Bird — Double DQN</h1>
+      <h2 class="subtitle is-5" style="color:#555; margin-top:0.3rem;">
+        Deep Reinforcement Learning from Raw Pixels
+      </h2>
+
+      <!-- Authors -->
+      <div class="authors">
+        <span>Nhut Han Pham</span>
+      </div>
+      <div class="affil">University of Technology Sydney &nbsp;·&nbsp; 41118 Robotic Perception and Learning</div>
+
+      <!-- Links -->
+      <div class="pub-links buttons is-centered" style="margin-top:1.2rem;">
+        <a class="button is-dark" href="https://github.com/NhutHan65/flappy-bird-dqn" target="_blank">
+          <span class="icon"><i class="fab fa-github"></i></span>
+          <span>Code</span>
+        </a>
+        <a class="button is-link" href="https://wandb.ai/nhuthan-pham-university-of-technology-sydney/flappy-bird-dqn" target="_blank">
+          <span class="icon"><i class="fas fa-chart-line"></i></span>
+          <span>WandB</span>
+        </a>
+        <a class="button is-info is-light" href="#video">
+          <span class="icon"><i class="fas fa-play-circle"></i></span>
+          <span>Video</span>
+        </a>
+        <a class="button is-success is-light" href="#results">
+          <span class="icon"><i class="fas fa-table"></i></span>
+          <span>Results</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════════════════════════════════════════════ TEASER -->
+<section class="teaser">
+  <div class="container">
+    <div class="columns is-centered is-vcentered">
+      <div class="column is-4 has-text-centered">
+        <img src="images/flappy_bird_demp.gif" alt="RGB agent demo" style="max-height:260px; border-radius:6px;" />
+        <p class="demo-label">RGB agent</p>
+      </div>
+      <div class="column is-4 has-text-centered">
+        <img src="images/grayscale_demo.gif" alt="Grayscale agent demo" style="max-height:260px; border-radius:6px;" />
+        <p class="demo-label">Grayscale agent</p>
+      </div>
+      <div class="column is-4 has-text-centered">
+        <img src="images/threshold_demo.gif" alt="Threshold agent demo" style="max-height:260px; border-radius:6px;" />
+        <p class="demo-label">Threshold agent — best performer</p>
+      </div>
+    </div>
+    <p class="teaser-caption has-text-centered">
+      Three trained agents playing Flappy Bird, each using a different frame preprocessing mode.
+      The threshold agent (right) achieved a mean score of <strong>282.12</strong> and a max of <strong>1221 pipes</strong>.
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════ ABSTRACT -->
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+
+        <h2 class="section-title">Abstract</h2>
+        <p style="font-size:1.05rem; line-height:1.8;">
+          This project modernises a 10-year-old Flappy Bird DQN implementation
+          (<em>yenchenlin/DeepLearningFlappyBird</em>, TensorFlow 0.7, Python 2) into a
+          state-of-the-art Deep Reinforcement Learning system using PyTorch.
+          Going well beyond the tutorial baseline — which uses a hand-crafted 2-D state vector
+          with a plain MLP — this implementation trains directly from raw pixels via a
+          <strong>Dueling CNN</strong> combined with <strong>Double DQN</strong>,
+          <strong>Prioritized Experience Replay (PER)</strong>, and a <strong>soft τ-update</strong>
+          target network.
+          An ablation study across three preprocessing modes (grayscale, binary threshold, and full RGB)
+          reveals that binary thresholding — despite using fewer training episodes —
+          dramatically outperforms grayscale, reaching a mean score of 282 vs. 19,
+          highlighting the impact of input representation on CNN convergence in pixel-based RL.
+        </p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ BEYOND THE TUTORIAL -->
+<section class="section" style="background:#fafafa; padding-top:2rem;">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-10">
+
+        <h2 class="section-title">Beyond the Tutorial</h2>
+        <p style="margin-bottom:1.2rem;">
+          The tutorial (<code>Tutorial_07_solution_DQN.ipynb</code>) uses vanilla DQN + MLP on a 2-D
+          hand-crafted state vector. Every component below goes beyond that baseline.
+        </p>
+
+        <div class="table-container">
+          <table class="table is-bordered is-striped is-fullwidth algo-row">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Tutorial</th>
+                <th>This project</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Input</td>
+                <td>[x, y] 2-D vector</td>
+                <td>Raw pixels → CNN (84×84 × 4 frames)</td>
+              </tr>
+              <tr>
+                <td>Network</td>
+                <td>MLP 128→128</td>
+                <td><strong>Dueling CNN</strong> — V(s) + A(s,a) − mean(A)</td>
+              </tr>
+              <tr>
+                <td>DQN variant</td>
+                <td>Vanilla DQN</td>
+                <td><strong>Double DQN</strong> — policy net selects, target net evaluates</td>
+              </tr>
+              <tr>
+                <td>Target update</td>
+                <td>Hard copy every N steps</td>
+                <td><strong>Soft τ-update</strong> (τ = 0.005 every step)</td>
+              </tr>
+              <tr>
+                <td>Replay sampling</td>
+                <td>Uniform</td>
+                <td><strong>Prioritized Experience Replay (PER)</strong></td>
+              </tr>
+              <tr>
+                <td>Forgetting protection</td>
+                <td>10% protected segment</td>
+                <td>10% protected <strong>+ PER priority</strong></td>
+              </tr>
+              <tr>
+                <td>Data augmentation</td>
+                <td>None</td>
+                <td>Brightness jitter × uniform(0.85, 1.15)</td>
+              </tr>
+              <tr>
+                <td>Preprocessing</td>
+                <td>N/A</td>
+                <td><strong>Ablation</strong>: grayscale / threshold / rgb</td>
+              </tr>
+              <tr>
+                <td>Logging</td>
+                <td>None</td>
+                <td><strong>WandB</strong> — score, loss, Q-max, ε, β per episode</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ ARCHITECTURE -->
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-9">
+
+        <h2 class="section-title">Network Architecture</h2>
+        <div class="has-text-centered">
+          <img src="images/network.png" alt="Dueling CNN architecture" style="max-width:100%; border-radius:6px;" />
+        </div>
+        <p style="margin-top:1rem;">
+          Three convolutional layers (8×8/4, 4×4/2, 3×3/1) extract spatial features from
+          stacked frames. The feature map is then split into two streams:
+          a <strong>Value stream</strong> V(s) estimating how good the current state is,
+          and an <strong>Advantage stream</strong> A(s,a) estimating the relative value of each action.
+          The combined output is: <code>Q(s,a) = V(s) + A(s,a) − mean(A(s,·))</code>
+        </p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════ PREPROCESSING -->
+<section class="section" style="background:#fafafa; padding-top:2rem;">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-9">
+
+        <h2 class="section-title">Frame Preprocessing</h2>
+        <div class="has-text-centered">
+          <img src="images/preprocess.png" alt="Preprocessing pipeline" style="max-width:90%; border-radius:6px;" />
+        </div>
+        <p style="margin-top:1rem;">
+          Raw 288×512 game frames are resized to 84×84 and preprocessed in one of three modes,
+          then stacked across 4 consecutive frames to give the agent a sense of motion:
+        </p>
+        <div class="columns" style="margin-top:0.8rem;">
+          <div class="column">
+            <div class="highlight-box">
+              <strong>Grayscale</strong>
+              <p style="margin-top:0.3rem;">Resize + luminance → (4, 84, 84). Baseline mode.</p>
+            </div>
+          </div>
+          <div class="column">
+            <div class="highlight-box">
+              <strong>Threshold</strong>
+              <p style="margin-top:0.3rem;">Grayscale + binarise at 127 → pure black/white (4, 84, 84). Cleaner edges.</p>
+            </div>
+          </div>
+          <div class="column">
+            <div class="highlight-box">
+              <strong>RGB</strong>
+              <p style="margin-top:0.3rem;">Resize + keep all 3 channels → (12, 84, 84). Larger input, more information.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════ VIDEO -->
+<section class="section" id="video">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+
+        <h2 class="section-title">Video Demo</h2>
+        <!-- Replace the placeholder below with an <iframe> once you have a YouTube link -->
+        <!-- Example:
+        <div class="video-container">
+          <iframe width="100%" height="400" src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+            frameborder="0" allowfullscreen></iframe>
+        </div>
+        -->
+        <div class="video-placeholder">
+          <i class="fas fa-video"></i>
+          <span>Video coming soon</span>
+          <span style="font-size:0.8rem; margin-top:0.5rem; color:#666;">Replace this block with a YouTube embed</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════ RESULTS -->
+<section class="section" id="results" style="background:#fafafa; padding-top:2rem;">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-10">
+
+        <h2 class="section-title">Results</h2>
+
+        <!-- Ablation table -->
+        <h3 class="is-size-5 has-text-weight-semibold" style="margin-bottom:0.8rem;">Ablation Study — 50 evaluation episodes</h3>
+        <div class="table-container">
+          <table class="table is-bordered is-striped ablation">
+            <thead>
+              <tr>
+                <th>Mode</th>
+                <th>Training episodes</th>
+                <th>Mean score</th>
+                <th>Max score</th>
+                <th>Min score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Grayscale</td>
+                <td>1550</td>
+                <td>19.52</td>
+                <td>66</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>RGB</td>
+                <td>500</td>
+                <td>124.68</td>
+                <td>561</td>
+                <td>8</td>
+              </tr>
+              <tr style="background:#f0fff4;">
+                <td><strong>Threshold</strong></td>
+                <td>500</td>
+                <td class="best">282.12</td>
+                <td class="best">1221</td>
+                <td class="best">3</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Score overlay -->
+        <h3 class="is-size-5 has-text-weight-semibold" style="margin-top:2rem; margin-bottom:0.8rem;">Score Comparison — All 3 modes</h3>
+        <div class="has-text-centered">
+          <img src="images/3 runs overlay score.png" alt="Score comparison all modes" style="max-width:100%; border-radius:6px;" />
+        </div>
+
+        <!-- Grayscale curves -->
+        <h3 class="is-size-5 has-text-weight-semibold" style="margin-top:2rem; margin-bottom:0.8rem;">Grayscale Baseline — Learning Curves</h3>
+        <div class="columns">
+          <div class="column has-text-centered">
+            <img src="images/Grayscale score.png" alt="Grayscale score" style="max-width:100%; border-radius:6px;" />
+            <p class="demo-label">Score per episode</p>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column has-text-centered">
+            <img src="images/Grayscale Loss.png" alt="Grayscale loss" style="max-width:100%; border-radius:6px;" />
+            <p class="demo-label">TD loss</p>
+          </div>
+          <div class="column has-text-centered">
+            <img src="images/Grayscale Q_max.png" alt="Grayscale Q-max" style="max-width:100%; border-radius:6px;" />
+            <p class="demo-label">Q-max</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ DISCUSSION -->
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+
+        <h2 class="section-title">Discussion</h2>
+
+        <p style="line-height:1.8; margin-bottom:1rem;">
+          The most significant finding is the performance gap between preprocessing modes.
+          Despite training for only 500 episodes — compared to 1550 for grayscale —
+          the threshold agent achieved <strong>14× higher mean score</strong> (282 vs. 19)
+          and nearly 19× higher max score (1221 vs. 66).
+          Binary thresholding removes background texture and colour gradients,
+          leaving only the structural edges that matter for the task (pipe boundaries, bird position).
+          This dramatically reduces the complexity of the CNN's learning problem.
+        </p>
+
+        <p style="line-height:1.8; margin-bottom:1rem;">
+          The RGB agent, with its 12-channel (4 frames × 3 channels) input, outperformed grayscale
+          despite the larger input dimensionality, suggesting that colour information provides
+          useful signal even in this environment.
+          However, RGB requires more training time and GPU memory than grayscale.
+        </p>
+
+        <p style="line-height:1.8; margin-bottom:1rem;">
+          The Double DQN architecture (decoupling action selection from evaluation) combined with
+          Dueling streams and PER produced stable training curves without catastrophic forgetting,
+          as evidenced by the smooth Q-max growth and loss decay in the grayscale run.
+          The protected replay segment — retaining the first 10 % of experiences —
+          preserved early exploratory behaviour that is otherwise lost to overwriting in standard buffers.
+        </p>
+
+        <div class="highlight-box">
+          <strong>Key takeaway:</strong>
+          <p>Input preprocessing is not a minor implementation detail — it is a primary driver of convergence speed in pixel-based RL. Binary thresholding, borrowed from the original DQN paper, outperforms both grayscale and RGB on this task with fewer training episodes.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════ TEAM -->
+<section class="section" style="background:#fafafa; padding-top:2rem;">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+
+        <h2 class="section-title">Author</h2>
+        <div class="columns is-centered">
+          <div class="column is-3 author-card">
+            <!-- Replace src with your actual avatar photo -->
+            <img
+              class="author-avatar"
+              src="images/avatar.jpg"
+              alt="Nhut Han Pham"
+              onerror="this.src='https://ui-avatars.com/api/?name=Nhut+Han+Pham&background=3273dc&color=fff&size=100'"
+            />
+            <p><strong>Nhut Han Pham</strong></p>
+            <p style="color:#666;">UTS &mdash; 2026</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ BIBTEX -->
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+
+        <h2 class="section-title">Citation</h2>
+        <div class="bibtex-block">@misc{pham2026flappydqn,
+  author    = {Nhut Han Pham},
+  title     = {Flappy Bird — Double DQN: Deep RL from Raw Pixels},
+  year      = {2026},
+  publisher = {GitHub},
+  journal   = {GitHub repository},
+  howpublished = {\url{https://github.com/NhutHan65/flappy-bird-dqn}}
+}</div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ REFERENCES -->
+<section class="section" style="background:#fafafa; padding-top:1.5rem; padding-bottom:1.5rem;">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+
+        <h2 class="section-title">References</h2>
+        <ol style="line-height:2;">
+          <li>Mnih et al. <em>Human-level Control through Deep Reinforcement Learning.</em> Nature, 2015.</li>
+          <li>van Hasselt et al. <em>Deep Reinforcement Learning with Double Q-learning.</em> AAAI, 2016.</li>
+          <li>Wang et al. <em>Dueling Network Architectures for Deep Reinforcement Learning.</em> ICML, 2016.</li>
+          <li>Schaul et al. <em>Prioritized Experience Replay.</em> ICLR, 2016.</li>
+        </ol>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ FOOTER -->
+<footer class="footer">
+  <div class="container has-text-centered">
+    <p>
+      This project was completed for
+      <strong>41118 Robotic Perception and Learning</strong> at the
+      University of Technology Sydney, 2026.
+    </p>
+    <p style="margin-top:0.5rem;">
+      Website template inspired by
+      <a href="https://nerfies.github.io" target="_blank">Nerfies</a>.
+      Licensed under
+      <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a>.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
