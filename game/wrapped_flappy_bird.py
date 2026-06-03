@@ -12,9 +12,10 @@ SCREENWIDTH = 288
 SCREENHEIGHT = 512
 
 pygame.init()
-FPSCLOCK = pygame.time.Clock()
-SCREEN   = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
+FPSCLOCK  = pygame.time.Clock()
+SCREEN    = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
 pygame.display.set_caption('Flappy Bird')
+SCORE_FONT = pygame.font.SysFont('Arial', 22, bold=True)
 
 IMAGES, SOUNDS, HITMASKS = flappy_bird_utils.load()
 
@@ -171,6 +172,15 @@ class GameState:
                 px[:,:,1] = gray
                 px[:,:,2] = gray
                 del px  # release surface lock before update
+
+            # Score overlay — drawn after image capture so CNN input is unaffected
+            score_surf = SCORE_FONT.render(str(self.score), True, (255, 255, 255))
+            score_rect = score_surf.get_rect(centerx=SCREENWIDTH // 2, top=12)
+            # drop shadow for readability
+            shadow_surf = SCORE_FONT.render(str(self.score), True, (0, 0, 0))
+            SCREEN.blit(shadow_surf, (score_rect.x + 1, score_rect.y + 1))
+            SCREEN.blit(score_surf, score_rect)
+
             pygame.display.update()
             FPSCLOCK.tick(FPS)
 
