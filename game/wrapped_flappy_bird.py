@@ -15,7 +15,7 @@ pygame.init()
 FPSCLOCK  = pygame.time.Clock()
 SCREEN    = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
 pygame.display.set_caption('Flappy Bird')
-SCORE_FONT = pygame.font.SysFont('Arial', 22, bold=True)
+SCORE_FONT = pygame.font.SysFont('Arial', 36, bold=True)
 
 IMAGES, SOUNDS, HITMASKS = flappy_bird_utils.load()
 

@@ -159,7 +159,7 @@ class DoubleDQNAgent:
         self.steps   = ckpt['steps']
         self.epsilon = ckpt['epsilon']
         self.beta    = ckpt['beta']
-        print(f"[load] {path}  (steps={self.steps}, ε={self.epsilon:.4f})")
+        print(f"[load] {path}  (steps={self.steps}, eps={self.epsilon:.4f})")
 
     @staticmethod
     def latest_checkpoint(directory: str) -> str | None:
